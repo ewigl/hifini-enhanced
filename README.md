@@ -1,6 +1,6 @@
 ## HIFINI 音乐磁场 增强
 
-[GitHub](https://github.com/ewigl/hus)
+[GitHub](https://github.com/ewigl/hifini-enhanced)
 
 [Greasy Fork](https://greasyfork.org/zh-CN/scripts/502411-hifini-%E9%9F%B3%E4%B9%90%E7%A3%81%E5%9C%BA-%E5%A2%9E%E5%BC%BA)
 
