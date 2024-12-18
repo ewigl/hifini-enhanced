@@ -1,5 +1,7 @@
 ## HIFINI 音乐磁场 增强
 
+> HIFINI 近期更新了网站反爬反脚本措施，脚本已更新**临时**解决方案。回复按钮可能延迟出现。
+
 [GitHub](https://github.com/ewigl/hifini-enhanced)
 
 [Greasy Fork](https://greasyfork.org/zh-CN/scripts/502411-hifini-%E9%9F%B3%E4%B9%90%E7%A3%81%E5%9C%BA-%E5%A2%9E%E5%BC%BA)
