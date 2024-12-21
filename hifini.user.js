@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.3.5
+// @version      0.3.6
 // @description  一键自动回复，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
@@ -38,21 +38,21 @@
         USER_LOGIN_URL: '/user-login.htm',
     }
 
-    // // 自定义样式
-    // const styleCSS = `
-    // #${constants.QUICK_REPLY_BUTTON_ID} {
-    //     position: sticky;
-    //     top: 16px;
-    // }
+    // 自定义样式
+    const styleCSS = `
+    #${constants.QUICK_REPLY_BUTTON_ID} {
+        position: sticky;
+        top: 16px;
+    }
 
-    // #${constants.DOWNLOAD_LINKS_PANEL_ID} {
-    //     position: sticky;
-    //     top: 60px;
-    // }
-    // `
+    #${constants.DOWNLOAD_LINKS_PANEL_ID} {
+        position: sticky;
+        top: 60px;
+    }
+    `
 
-    // // 应用自定义样式
-    // GM_addStyle(styleCSS)
+    // 应用自定义样式
+    GM_addStyle(styleCSS)
 
     // 默认配置
     const config = {
@@ -167,7 +167,7 @@
 
     const initAction = {
         addQuickReplyButton() {
-            const quickReplyButtonDom = `<a id="${constants.QUICK_REPLY_BUTTON_ID}" class="btn btn-light btn-block mb-3" style="position: sticky; top: 16px;"> 自动回复 </a>`
+            const quickReplyButtonDom = `<a id="${constants.QUICK_REPLY_BUTTON_ID}" class="btn btn-light btn-block mb-3"> 自动回复 </a>`
             $(`.${constants.ASIDE_CLASS}`).append(quickReplyButtonDom)
 
             $(document).on('click', `#${constants.QUICK_REPLY_BUTTON_ID}`, operation.quickReply)
@@ -183,7 +183,7 @@
             })
 
             const downloadPanelDom = `
-            <div id="${constants.DOWNLOAD_LINKS_PANEL_ID}" class="card" style="position: sticky; top: 60px;">
+            <div id="${constants.DOWNLOAD_LINKS_PANEL_ID}" class="card">
                 <div class="m-3 text-center">
                     ${linksDom}
                 </div>
@@ -210,29 +210,11 @@
                 // 自动填充蓝奏网盘提取码
                 initAction.autoFillLanzouPwd()
             } else {
-                // max try 30s
-                let countDown = 60
-
-                // set interval to detect $, temporary solution.
-                const tempInterval = setInterval(() => {
-                    if (!$) {
-                        console.log('HIFINI User Script: $ not found, yet.')
-
-                        countDown--
-
-                        if (countDown <= 0) {
-                            clearInterval(tempInterval)
-                        }
-                    } else {
-                        initAction.addQuickReplyButton()
-                        utils.isReplied() && initAction.addNetDiskLinksPanel()
-
-                        clearInterval(tempInterval)
-                    }
-                }, 500)
+                initAction.addQuickReplyButton()
+                utils.isReplied() && initAction.addNetDiskLinksPanel()
             }
 
-            console.log('HIFINI User Script is ready.')
+            console.log('HIFINI Enhanced is ready.')
         },
     }
 
