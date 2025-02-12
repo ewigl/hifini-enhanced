@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.3.6
+// @version      0.3.7
 // @description  一键自动回复，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
@@ -31,6 +31,7 @@
 
         BAIDU_HOST: 'pan.baidu.com',
         LANZOU_HOST: 'lanzn.com',
+        QUARK_HOST: 'pan.quark.cn',
 
         URL_PARAMS_PWD: 'pwd',
         LANZOU_PWD_INPUT_ID: 'pwd',
@@ -70,13 +71,18 @@
         isReplied() {
             return $(`.${constants.REPLIED_CLASS}`).length > 0
         },
-        isBaiduOrLanzou(url) {
+        getNetDiskType(url) {
+            let type = '未知'
+
             if (url.includes(constants.BAIDU_HOST)) {
-                return '百度'
+                type = '百度'
             } else if (url.includes(constants.LANZOU_HOST)) {
-                return '蓝奏'
+                type = '蓝奏'
+            } else if (url.includes(constants.QUARK_HOST)) {
+                type = '夸克'
             }
-            return '未知'
+
+            return type
         },
         isInLanzouSite() {
             return location.host.includes(constants.LANZOU_HOST)
@@ -101,23 +107,12 @@
 
             return pwd
         },
-        getLinkItems() {
-            let netDiskLinks = utils.getAllNetDiskLinks()
-            let pwds = utils.getAllPwds()
-
-            // 若链接与密码数量不等，则抛错（暂定）
-            if (netDiskLinks.length !== pwds.length) {
-                throw new Error('HIFINI User Script: netDiskLinks.length !== pwds.length')
-            }
-
-            return netDiskLinks.map((link, index) => {
-                return {
-                    // split 以兼容不规范 url
-                    link: link.split('?')[0] + '?pwd=' + pwds[index],
-                    pwd: pwds[index],
-                    type: utils.isBaiduOrLanzou(link),
-                }
-            })
+        getQuarkLinks() {
+            return $(`a[href*="${constants.QUARK_HOST}"]`)
+                .toArray()
+                .map((element) => {
+                    return element.href
+                })
         },
         // 获取页面内所有（a 标签）网盘链接（百度、蓝奏）
         getAllNetDiskLinks() {
@@ -138,6 +133,36 @@
             })
 
             return pwdArray
+        },
+        getLinkItems() {
+            // 获取所有网盘链接
+            let quarkLinks = utils.getQuarkLinks()
+            let netDiskLinks = utils.getAllNetDiskLinks()
+            let pwds = utils.getAllPwds()
+
+            // 若链接与密码数量不等，则抛错（暂定）
+            if (netDiskLinks.length !== pwds.length) {
+                throw new Error('HIFINI Enhanced: netDiskLinks.length !== pwds.length')
+            }
+
+            let netDiskLinksObj = netDiskLinks.map((link, index) => {
+                return {
+                    // split 以兼容不规范 url
+                    link: link.split('?')[0] + '?pwd=' + pwds[index],
+                    pwd: pwds[index],
+                    type: utils.getNetDiskType(link),
+                }
+            })
+
+            let quarkLinksObj = quarkLinks.map((link) => {
+                return {
+                    link: link,
+                    pwd: '',
+                    type: utils.getNetDiskType(link),
+                }
+            })
+
+            return [...netDiskLinksObj, ...quarkLinksObj]
         },
     }
 
