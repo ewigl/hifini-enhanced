@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.3.7
-// @description  一键自动回复，汇总网盘链接，自动填充网盘提取码。
+// @version      0.3.8
+// @description  自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifini-enhanced
@@ -39,6 +39,12 @@
         USER_LOGIN_URL: '/user-login.htm',
     }
 
+    const NET_DISK_TYPES = {
+        [constants.BAIDU_HOST]: '百度',
+        [constants.LANZOU_HOST]: '蓝奏',
+        [constants.QUARK_HOST]: '夸克',
+    }
+
     // 自定义样式
     const styleCSS = `
     #${constants.QUICK_REPLY_BUTTON_ID} {
@@ -63,7 +69,7 @@
 
     // 工具
     const utils = {
-        // 获取随机回复（replies）
+        // 获取随机回复
         getRandomReply() {
             return config.replies[Math.floor(Math.random() * config.replies.length)]
         },
@@ -72,17 +78,13 @@
             return $(`.${constants.REPLIED_CLASS}`).length > 0
         },
         getNetDiskType(url) {
-            let type = '未知'
-
-            if (url.includes(constants.BAIDU_HOST)) {
-                type = '百度'
-            } else if (url.includes(constants.LANZOU_HOST)) {
-                type = '蓝奏'
-            } else if (url.includes(constants.QUARK_HOST)) {
-                type = '夸克'
+            for (let key in NET_DISK_TYPES) {
+                if (url.includes(key)) {
+                    return NET_DISK_TYPES[key]
+                }
             }
 
-            return type
+            return '未知'
         },
         isInLanzouSite() {
             return location.host.includes(constants.LANZOU_HOST)
