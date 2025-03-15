@@ -19,7 +19,7 @@
     const constants = {
         ASIDE_CLASS: 'aside',
 
-        QUICK_REPLY_BUTTON_ID: 'hus_quick_reply_button',
+        QUICK_REPLY_BUTTON_ID: 'he_quick_reply_button',
         QUICK_REPLY_FORM_ID: 'quick_reply_form',
         QUICK_REPLY_INPUT_ID: 'message',
         QUICK_REPLY_SUBMIT_ID: 'submit',
@@ -27,7 +27,7 @@
         NON_REPLY_CLASS: 'alert-warning',
         REPLIED_CLASS: 'alert-success',
 
-        DOWNLOAD_LINKS_PANEL_ID: 'hus_download_links_panel',
+        DOWNLOAD_LINKS_PANEL_ID: 'he_download_links_panel',
 
         BAIDU_HOST: 'pan.baidu.com',
         LANZOU_HOST: 'lanzn.com',
