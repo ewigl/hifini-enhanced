@@ -6,7 +6,7 @@
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifini-enhanced
-// @match        http*://www.hifini.com/thread-*.htm
+// @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.lanzn.com/*
 // @icon         https://www.hifini.com/favicon.ico
 // @grant        GM_addStyle
