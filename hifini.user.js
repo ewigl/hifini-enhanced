@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.4.0
+// @version      0.4.1
 // @description  自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
@@ -80,8 +80,9 @@
     // 工具
     const utils = {
         // 顺便封装一下 log 吧，加个前缀。。。
-        logger(msg) {
-            console.log(`[HIFINI Enhanced] ${msg}`)
+        logger(...msg) {
+            const prefix = '[HIFINI Enhanced]'
+            console.log(prefix, ...msg)
         },
         // 获取随机回复
         getRandomReply() {
