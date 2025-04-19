@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.3.9
+// @version      0.4.0
 // @description  自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifini-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.lanzn.com/*
+// @match        http*://*.pan.quark.cn/s/*
 // @icon         https://www.hifini.com/favicon.ico
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -61,23 +62,36 @@
     // 应用自定义样式
     GM_addStyle(styleCSS)
 
-    // 默认配置
-    const config = {
-        // 回复内容
-        replies: ['666', 'Good', 'Nice', 'Thanks', '给力', '谢谢', '谢谢分享', '谢谢大佬', '感谢', '感谢分享', '感谢大佬'],
-    }
+    // 随机回复项目
+    const RANDOM_REPLIES = [
+        '666',
+        'Good',
+        'Nice',
+        'Thanks',
+        '给力',
+        '谢谢',
+        '谢谢分享',
+        '谢谢大佬',
+        '感谢',
+        '感谢分享',
+        '感谢大佬',
+    ]
 
     // 工具
     const utils = {
+        // 顺便封装一下 log 吧，加个前缀。。。
+        logger(msg) {
+            console.log(`[HIFINI Enhanced] ${msg}`)
+        },
         // 获取随机回复
         getRandomReply() {
-            return config.replies[Math.floor(Math.random() * config.replies.length)]
+            return RANDOM_REPLIES[Math.floor(Math.random() * RANDOM_REPLIES.length)]
         },
-        // 判断当前帖是否已回复
+        // 根据页面是否有 alert-success 类元素判断当前帖是否已回复
         isReplied() {
             return $(`.${constants.REPLIED_CLASS}`).length > 0
         },
-        getNetDiskType(url) {
+        getNetDiskTypeString(url) {
             for (let key in NET_DISK_TYPES) {
                 if (url.includes(key)) {
                     return NET_DISK_TYPES[key]
@@ -89,82 +103,99 @@
         isInLanzouSite() {
             return location.host.includes(constants.LANZOU_HOST)
         },
-        // “解密”提取码
-        getHiddenPwd(element) {
-            // 若无子元素，则无“加密”
-            if ($(element).children().length === 0) {
-                return $(element).text().trim().replace('提取码', '').replace(':', '').replace('：', '')
+        isInQuarkSite() {
+            return location.host.includes(constants.QUARK_HOST)
+        },
+        // 提取 alert-success 中内容，包含所有链接、提取码。格式化 alert-success 中的内容。
+        extractUrlOrCode(innerText) {
+            // 匹配链接或（及）提取码
+            const combinedRegex = /(https?:\/\/[^\s]+)|提取码:\s*([a-zA-Z0-9]+)/g
+
+            const results = []
+            let match
+
+            while ((match = combinedRegex.exec(innerText)) !== null) {
+                // 如果匹配到 URL（match[1]）
+                if (match[1]) {
+                    results.push({
+                        type: 'url',
+                        link: match[1],
+                    })
+                }
+                if (match[2]) {
+                    results.push({
+                        type: constants.URL_PARAMS_PWD,
+                        pwd: match[2],
+                    })
+                }
             }
 
-            // 若有子元素，则有“加密”
-            let pwd = ''
+            if (results.length === 0) {
+                // 如果没有匹配到链接或"提取码"文本，则返回原始文本
+                return [
+                    {
+                        type: constants.URL_PARAMS_PWD,
+                        pwd: innerText.trim().replace('提取码', '').replace(':', '').replace('：', ''),
+                    },
+                ]
+            }
 
-            $(element)
-                .find('span')
-                .each((_index, innerElement) => {
-                    if (!($(innerElement).css('display') === 'none')) {
-                        pwd += $(innerElement).text()
+            return results
+        },
+        getDrivesReady() {
+            // 获取页面内所有网盘链接（百度、蓝奏、夸克）, 以及所有隐藏内容（alert-success）。
+            // 逻辑基础：所有的提取码必须在隐藏内容（绿条）内。
+
+            // 虽然叫 hiddenElements，但实际上是所有的网盘链接 + 回复可见内容。
+            let hiddenElements = $(`
+                a[href*="${constants.BAIDU_HOST}"],
+                a[href*="${constants.LANZOU_HOST}"],
+                a[href*="${constants.QUARK_HOST}"],
+                .${constants.REPLIED_CLASS}
+                `).toArray()
+
+            // init formattedDrives
+            let formattedDrives = []
+
+            // 遍历所有相关元素，提取其中的链接和提取码。
+            hiddenElements.forEach((element) => {
+                if ($(element).hasClass(constants.REPLIED_CLASS)) {
+                    // alert-success 元素，格式化其中内容。
+                    let parsedResult = utils.extractUrlOrCode(element.innerText)
+                    parsedResult.forEach((item) => {
+                        if (item.type === 'url') {
+                            // 链接类型，直接 push 到 formattedDrives 中。
+                            formattedDrives.push({
+                                link: item.link,
+                                type: utils.getNetDiskTypeString(item.link),
+                                pwd: item.pwd,
+                            })
+                        } else if (item.type === constants.URL_PARAMS_PWD) {
+                            // 提取码类型，更新 formattedDrives 中的 pwd。默认更新上一条数据。
+                            formattedDrives[formattedDrives.length - 1].pwd = item.pwd
+                        }
+                    })
+                } else {
+                    // 链接类型，直接 push 到 formattedDrives 中。
+                    if (formattedDrives.some((item) => item.link === element.href)) {
+                        // 去重
+                        return
+                    } else {
+                        formattedDrives.push({
+                            link: element.href,
+                            type: utils.getNetDiskTypeString(element.href),
+                        })
                     }
-                })
-
-            return pwd
-        },
-        getQuarkLinks() {
-            return $(`a[href*="${constants.QUARK_HOST}"]`)
-                .toArray()
-                .map((element) => {
-                    return element.href
-                })
-        },
-        // 获取页面内所有（a 标签）网盘链接（百度、蓝奏）
-        getAllNetDiskLinks() {
-            return $(`a[href*="${constants.BAIDU_HOST}"], a[href*="${constants.LANZOU_HOST}"]`)
-                .toArray()
-                .map((element) => {
-                    return element.href
-                })
-        },
-        // 获取页面内所有提取码（alert-success）
-        getAllPwds() {
-            let pwdElements = $(`.${constants.REPLIED_CLASS}`)
-
-            let pwdArray = []
-
-            pwdElements.each((_index, element) => {
-                utils.getHiddenPwd(element) && pwdArray.push(utils.getHiddenPwd(element))
-            })
-
-            return pwdArray
-        },
-        getLinkItems() {
-            // 获取所有网盘链接
-            let quarkLinks = utils.getQuarkLinks()
-            let netDiskLinks = utils.getAllNetDiskLinks()
-            let pwds = utils.getAllPwds()
-
-            // 若链接与密码数量不等，则抛错（暂定）
-            if (netDiskLinks.length !== pwds.length) {
-                throw new Error('HIFINI Enhanced: netDiskLinks.length !== pwds.length')
-            }
-
-            let netDiskLinksObj = netDiskLinks.map((link, index) => {
-                return {
-                    // split 以兼容不规范 url
-                    link: link.split('?')[0] + '?pwd=' + pwds[index],
-                    pwd: pwds[index],
-                    type: utils.getNetDiskType(link),
                 }
             })
 
-            let quarkLinksObj = quarkLinks.map((link) => {
+            // 最后 map 一次，将提取码和链接拼接在一起。
+            return formattedDrives.map((item) => {
                 return {
-                    link: link,
-                    pwd: '',
-                    type: utils.getNetDiskType(link),
+                    ...item,
+                    link: item.pwd ? item.link.split('?')[0] + '?pwd=' + item.pwd : item.link,
                 }
             })
-
-            return [...netDiskLinksObj, ...quarkLinksObj]
         },
     }
 
@@ -180,15 +211,15 @@
 
                 submitButtonDom.click()
 
-                //   or
+                //   或者直接提交表单？
                 //   $("#quick_reply_form").submit();
             } else {
-                console.log('Need to Login.')
+                utils.logger('需要登录。')
                 window.location.href = constants.USER_LOGIN_URL
             }
 
             // 可选， Ajax 方式
-            // To do, or not to do, that is the question.
+            // 懒得做了
         },
     }
 
@@ -200,13 +231,17 @@
             $(document).on('click', `#${constants.QUICK_REPLY_BUTTON_ID}`, operation.quickReply)
         },
         addNetDiskLinksPanel() {
-            let linkItems = utils.getLinkItems()
+            let paneItems = utils.getDrivesReady()
+
+            utils.logger('已提取的网盘链接: ', paneItems)
 
             let linksDom = ''
 
-            linkItems.forEach((item) => {
+            paneItems.forEach((item) => {
                 linksDom += `
-                <a class="btn btn-light btn-block" href="${item.link}" target="_blank"> ${item.type} / ${item.pwd} </a>`
+                <a class="btn btn-light btn-block" href="${item.link}" target="_blank">
+                    ${item.type} / ${item.pwd || '-'}
+                </a>`
             })
 
             const downloadPanelDom = `
@@ -228,20 +263,51 @@
                 $(`#${constants.LANZOU_PWD_INPUT_ID}`).val(pwd)
             }
         },
+        autoFillQuarkPwd() {
+            const urlParams = new URLSearchParams(window.location.search)
+
+            if (urlParams.has(constants.URL_PARAMS_PWD)) {
+                let pwd = urlParams.get(constants.URL_PARAMS_PWD)
+
+                // 利用 observer，等待页面加载完成。
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'childList') {
+                            const inputElement = document.querySelector('input[placeholder="请输入提取码，不区分大小写"]')
+                            if (inputElement) {
+                                inputElement.value = pwd
+                                utils.logger('提取码已填充: ', pwd)
+                                // 停止观察
+                                observer.disconnect()
+                            }
+                        }
+                    })
+                })
+                const config = { childList: true, subtree: true }
+                const targetNode = document.querySelector('body')
+                // 开始观察
+                observer.observe(targetNode, config)
+            }
+        },
     }
 
-    // Main
+    // 程序入口
     const main = {
         init() {
             if (utils.isInLanzouSite()) {
                 // 自动填充蓝奏网盘提取码
                 initAction.autoFillLanzouPwd()
+            } else if (utils.isInQuarkSite()) {
+                // 自动填充夸克网盘提取码
+                initAction.autoFillQuarkPwd()
             } else {
+                // 始终添加快速回复按钮
                 initAction.addQuickReplyButton()
+                // 若帖子已被回复，添加网盘链接面板
                 utils.isReplied() && initAction.addNetDiskLinksPanel()
-            }
 
-            console.log('HIFINI Enhanced is ready.')
+                utils.logger('初始化完成。')
+            }
         },
     }
 
