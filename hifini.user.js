@@ -315,6 +315,7 @@
                 // 利用 observer，等待页面加载完成。
                 const observer = new MutationObserver((mutations) => {
                     mutations.forEach((mutation) => {
+                        utils.logger('MutationObserver 触发: ', mutation)
                         if (mutation.type === 'childList') {
                             const inputElement = document.querySelector('input[placeholder="请输入提取码，不区分大小写"]')
                             if (inputElement) {
@@ -328,7 +329,7 @@
                     })
                 })
                 const config = { childList: true, subtree: true }
-                const targetNode = document.querySelector('body')
+                const targetNode = document.querySelector('#ice-container')
                 // 开始观察
                 observer.observe(targetNode, config)
             }
