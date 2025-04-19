@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.4.1
+// @version      0.4.2
 // @description  自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
@@ -106,6 +106,45 @@
         },
         isInQuarkSite() {
             return location.host.includes(constants.QUARK_HOST)
+        },
+        simulateInput(element, text) {
+            element.focus()
+            element.value = ''
+            element.setRangeText(text)
+            element.dispatchEvent(new Event('input', { bubbles: true }))
+            element.dispatchEvent(new Event('change', { bubbles: true }))
+        },
+        simulateInputWithInterval(element, text, delay = 200, clickElement) {
+            element.focus()
+            element.value = ''
+
+            let index = 0
+            const chars = text.split('')
+
+            const interval = setInterval(() => {
+                if (index >= chars.length) {
+                    // 输入完成，触发 change 事件并清除 interval
+                    const changeEvent = new Event('change', { bubbles: true, cancelable: true })
+                    element.dispatchEvent(changeEvent)
+                    clearInterval(interval)
+
+                    if (clickElement) {
+                        // 如果有点击元素，则模拟点击
+                        clickElement.click()
+                    }
+                    return
+                }
+
+                // 插入单个字符
+                const char = chars[index]
+                element.setRangeText(char, element.selectionStart, element.selectionEnd, 'end')
+
+                // 触发 input 事件
+                const inputEvent = new Event('input', { bubbles: true, cancelable: true })
+                element.dispatchEvent(inputEvent)
+
+                index++
+            }, delay)
         },
         // 提取 alert-success 中内容，包含所有链接、提取码。格式化 alert-success 中的内容。
         extractUrlOrCode(innerText) {
@@ -261,9 +300,12 @@
             if (urlParams.has(constants.URL_PARAMS_PWD)) {
                 let pwd = urlParams.get(constants.URL_PARAMS_PWD)
 
-                $(`#${constants.LANZOU_PWD_INPUT_ID}`).val(pwd)
+                // $(`#${constants.LANZOU_PWD_INPUT_ID}`).val(pwd)
+                // 秀一下模拟输入
+                utils.simulateInputWithInterval($(`#${constants.LANZOU_PWD_INPUT_ID}`)[0], pwd, 200, $(`.passwddiv-btn`))
             }
         },
+
         autoFillQuarkPwd() {
             const urlParams = new URLSearchParams(window.location.search)
 
@@ -276,7 +318,8 @@
                         if (mutation.type === 'childList') {
                             const inputElement = document.querySelector('input[placeholder="请输入提取码，不区分大小写"]')
                             if (inputElement) {
-                                inputElement.value = pwd
+                                // utils.simulateInput(inputElement, pwd)
+                                utils.simulateInputWithInterval(inputElement, pwd)
                                 utils.logger('提取码已填充: ', pwd)
                                 // 停止观察
                                 observer.disconnect()
