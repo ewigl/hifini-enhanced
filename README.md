@@ -20,6 +20,10 @@
 
 支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
 
+### 填充提取码后自动点击提取按钮
+
+支持蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
+
 ### 图例
 
 ![00](https://raw.githubusercontent.com/ewigl/hus/main/images/00.png)
