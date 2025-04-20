@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.4.2
+// @version      0.4.3
 // @description  自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifini-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.lanzn.com/*
+// @match        http*://*.lanzoue.com/*
 // @match        http*://*.pan.quark.cn/s/*
 // @icon         https://www.hifini.com/favicon.ico
 // @grant        GM_addStyle
@@ -31,18 +32,22 @@
         DOWNLOAD_LINKS_PANEL_ID: 'he_download_links_panel',
 
         BAIDU_HOST: 'pan.baidu.com',
-        LANZOU_HOST: 'lanzn.com',
+        LANZN_HOST: 'lanzn.com',
+        LANZOUE_HOST: 'lanzoue.com',
         QUARK_HOST: 'pan.quark.cn',
 
         URL_PARAMS_PWD: 'pwd',
-        LANZOU_PWD_INPUT_ID: 'pwd',
+        LANZOU_PWD_INPUT_SELECTOR: '#pwd',
+        LANZN_PWD_SUB_SELECTOR: '.passwddiv-btn',
+        LANZOUE_PWD_SUB_SELECTOR: '#sub',
 
         USER_LOGIN_URL: '/user-login.htm',
     }
 
     const NET_DISK_TYPES = {
         [constants.BAIDU_HOST]: '百度',
-        [constants.LANZOU_HOST]: '蓝奏',
+        [constants.LANZN_HOST]: '蓝奏',
+        [constants.LANZOUE_HOST]: '蓝奏',
         [constants.QUARK_HOST]: '夸克',
     }
 
@@ -102,10 +107,16 @@
             return '未知'
         },
         isInLanzouSite() {
-            return location.host.includes(constants.LANZOU_HOST)
+            return location.host.includes(constants.LANZN_HOST) || location.host.includes(constants.LANZOUE_HOST)
         },
         isInQuarkSite() {
             return location.host.includes(constants.QUARK_HOST)
+        },
+        getLanzouSubButton() {
+            // 确定蓝奏网盘的提交按钮，为什么蓝奏你要做两个不同的页面。(╯‵□′)╯︵┻━┻
+            const subButton = $(constants.LANZN_PWD_SUB_SELECTOR)[0] || $(constants.LANZOUE_PWD_SUB_SELECTOR)[0]
+
+            return subButton
         },
         simulateInput(element, text) {
             element.focus()
@@ -189,7 +200,8 @@
             // 虽然叫 hiddenElements，但实际上是所有的网盘链接 + 回复可见内容。
             let hiddenElements = $(`
                 a[href*="${constants.BAIDU_HOST}"],
-                a[href*="${constants.LANZOU_HOST}"],
+                a[href*="${constants.LANZN_HOST}"],
+                a[href*="${constants.LANZOUE_HOST}"],
                 a[href*="${constants.QUARK_HOST}"],
                 .${constants.REPLIED_CLASS}
                 `).toArray()
@@ -300,12 +312,10 @@
             if (urlParams.has(constants.URL_PARAMS_PWD)) {
                 let pwd = urlParams.get(constants.URL_PARAMS_PWD)
 
-                // $(`#${constants.LANZOU_PWD_INPUT_ID}`).val(pwd)
                 // 秀一下模拟输入
-                utils.simulateInputWithInterval($(`#${constants.LANZOU_PWD_INPUT_ID}`)[0], pwd, 200, $(`.passwddiv-btn`))
+                utils.simulateInputWithInterval($(constants.LANZOU_PWD_INPUT_SELECTOR)[0], pwd, 200, utils.getLanzouSubButton())
             }
         },
-
         autoFillQuarkPwd() {
             const urlParams = new URLSearchParams(window.location.search)
 
