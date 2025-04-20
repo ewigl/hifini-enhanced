@@ -2,7 +2,7 @@
 // @name         HIFINI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifini-enhanced
 // @version      0.4.3
-// @description  自动回帖，汇总网盘链接，自动填充网盘提取码。
+// @description  一键自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifini-enhanced
