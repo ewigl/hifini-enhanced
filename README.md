@@ -14,11 +14,11 @@
 
 ### 自动汇总网盘链接
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com) 、夸克网盘 (pan.quark.cn)
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
 
 ### 自动填充网盘提取码
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com) 、夸克网盘（pan.quark.cn）。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
 
 ### 图例
 
