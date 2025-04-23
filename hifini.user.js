@@ -366,30 +366,30 @@
             // “兰盘”按钮
             const lpButton = $(`#lp_code`)
 
-            let vipQuickGeButtonDom = ''
-            // 如果没有这两个按钮，说明是普通用户。
-            if (!dpButton.length && !lpButton.length) {
-                vipQuickGeButtonDom = `<a class="btn btn-light btn-block"> HIFINI Enhanced </a>`
-            } else {
-                vipQuickGeButtonDom = `
-                <a id="${constants.VIP_QUICK_GET_BUTTON_ID}"
-                    class="btn btn-light btn-block" 
-                    style="color:red;"
-                >
-                    [VIP] 快速获取
-                </a>
-                `
+            const buttons = []
+
+            if (dpButton.length || lpButton.length) {
+                buttons.push(`
+                    <a id="${constants.VIP_QUICK_GET_BUTTON_ID}"
+                        class="btn btn-light btn-block" 
+                        style="color:red;"
+                    >
+                        [VIP] 快速获取
+                    </a>`)
                 $(document).on('click', `#${constants.VIP_QUICK_GET_BUTTON_ID}`, operation.getVIPPass)
             }
 
-            const quickReplyButtonDom = `<a id="${constants.QUICK_REPLY_BUTTON_ID}" class="btn btn-light btn-block"> 自动回复 </a>`
+            buttons.push(`
+                <a id="${constants.QUICK_REPLY_BUTTON_ID}" class="btn btn-light btn-block">
+                    自动回复
+                </a>`)
+
             $(document).on('click', `#${constants.QUICK_REPLY_BUTTON_ID}`, operation.quickReply)
 
             const buttonsPanelDom = `
             <div id="${constants.BUTTONS_PANEL_ID}" class="card">
                 <div class="m-3 text-center">
-                    ${vipQuickGeButtonDom}
-                    ${quickReplyButtonDom}
+                    ${buttons.join('\n')}
                 </div>
             </div>`
 
