@@ -13,6 +13,8 @@
 // @match        http*://*.pan.quark.cn/s/*
 // @icon         https://www.hifini.com/favicon.ico
 // @grant        GM_addStyle
+// @grant        GM_getValue
+// @grant        GM_setValue
 // ==/UserScript==
 
 ;(function () {
@@ -65,8 +67,60 @@
 
     #${constants.DOWNLOAD_LINKS_PANEL_ID} {
         position: sticky;
-        top: 126px;
+        top: 202px;
     }
+
+    .he_custom_switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 18px;
+    }
+
+    .he_custom_switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .he_custom_slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .he_custom_slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 1px;
+        bottom: 1px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .he_custom_slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .he_custom_slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .he_custom_slider:before {
+        -webkit-transform: translateX(22px);
+        -ms-transform: translateX(22px);
+        transform: translateX(22px);
+    }
+
     `
 
     // 应用自定义样式
@@ -89,6 +143,12 @@
 
     // 工具
     const utils = {
+        getValue(name) {
+            return GM_getValue(name)
+        },
+        setValue(name, value) {
+            GM_setValue(name, value)
+        },
         // 顺便封装一下 log 吧，加个前缀。。。
         logger(...msg) {
             const prefix = '[HIFINI Enhanced]'
@@ -101,6 +161,9 @@
         // 根据页面是否有 alert-success 类元素判断当前帖是否已回复（或为 VIP）
         isReplied() {
             return $(`.${constants.REPLIED_CLASS}`).length > 0
+        },
+        isAutoVIPGetCode() {
+            return utils.getValue('autoVIPGetCode')
         },
         getNetDiskTypeString(url) {
             for (let key in NET_DISK_TYPES) {
@@ -365,6 +428,9 @@
     }
 
     const initAction = {
+        initDefaultConfig() {
+            utils.getValue('autoVIPGetCode') === undefined && utils.setValue('autoVIPGetCode', false)
+        },
         addEnhancedButtons() {
             // “度盘”按钮
             const dpButton = $(`#dp_code`)
@@ -374,13 +440,39 @@
             const buttons = []
 
             if (dpButton.length || lpButton.length) {
+                // VIP 是否开启自动获取按钮
+                buttons.push(`
+                    <label class="he_custom_switch" title="不推荐开启">
+                        <input type="checkbox" id="autoVIPGetCode" ${utils.getValue('autoVIPGetCode') ? 'checked' : ''}>
+                        <span class="he_custom_slider"></span>
+                    </label>
+
+                    <ul class="small break-all">
+                        <li class="line-height-2" title="不推荐开启">
+                            进入帖子自动获取提取码
+                        </li>
+                    </ul>
+                    `)
+
+                $(document).on('change', `#autoVIPGetCode`, function () {
+                    const isChecked = $(this).is(':checked')
+                    utils.setValue('autoVIPGetCode', isChecked)
+                    if (isChecked) {
+                        utils.logger('VIP 进入帖子自动获取提取码已开启。')
+                    } else {
+                        utils.logger('VIP 进入帖子自动获取提取码已关闭。')
+                    }
+                })
+
+                // VIP 一键获取提取码按钮
                 buttons.push(`
                     <a id="${constants.VIP_QUICK_GET_BUTTON_ID}"
                         class="btn btn-light btn-block" 
                         style="color:red;"
                     >
-                        [VIP] 快速获取
+                        [VIP] 免费获取
                     </a>`)
+
                 $(document).on('click', `#${constants.VIP_QUICK_GET_BUTTON_ID}`, operation.getVIPPass)
             }
 
@@ -470,11 +562,16 @@
     // 程序入口
     const main = {
         init() {
+            initAction.initDefaultConfig()
+
             if (utils.isInLanzouSite()) {
                 initAction.autoFillLanzouPwd()
             } else if (utils.isInQuarkSite()) {
                 initAction.autoFillQuarkPwd()
             } else {
+                if (utils.isAutoVIPGetCode()) {
+                    operation.getVIPPass()
+                }
                 initAction.addEnhancedButtons()
                 utils.isReplied() && initAction.addNetDiskLinksPanel()
 
