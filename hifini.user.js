@@ -194,7 +194,12 @@
                 return [
                     {
                         type: constants.URL_PARAMS_PWD,
-                        pwd: innerText.trim().replace('提取码', '').replace(':', '').replace('：', ''),
+                        pwd: innerText
+                            .replace('提取码', '')
+                            .replace('****** 点击免费获取 ******', ' - ')
+                            .replace(':', '')
+                            .replace('：', '')
+                            .trim(),
                     },
                 ]
             }
