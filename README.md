@@ -38,6 +38,8 @@
 
 可选功能：进入帖子时立即自动获取提取码。（不推荐开启，如果访问帖子频率过高会触发验证机制。）
 
+关于验证机制的官方说明：[积分 / VIP 使用问题说明](https://www.hifini.com/thread-6.htm)
+
 ![01](https://raw.githubusercontent.com/ewigl/hus/main/images/01.png)
 
 ### 相关
