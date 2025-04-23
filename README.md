@@ -4,7 +4,7 @@
 
 [GitHub Raw](https://raw.githubusercontent.com/ewigl/hifini-enhanced/refs/heads/main/hifini.user.js)
 
-[Greasy Fork](https://greasyfork.org/zh-CN/scripts/502411-hifini-%E9%9F%B3%E4%B9%90%E7%A3%81%E5%9C%BA-%E5%A2%9E%E5%BC%BA)
+[Greasy Fork](https://greasyfork.org/scripts/502411)
 
 ### 随机自动回复
 
@@ -14,19 +14,31 @@
 
 ### 自动汇总网盘链接
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)。
 
 ### 自动填充网盘提取码
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)。
 
-### 填充提取码后自动点击提取按钮
+### 填充后自动点击提取按钮
 
-支持蓝奏云 (lanzn.com、lanzoue.com) 、夸克网盘 (pan.quark.cn)。
+支持蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)。
 
 ### 图例
 
+网站普通用户：
+
+点击自动回复即会自动刷新网页并汇总链接。
+
 ![00](https://raw.githubusercontent.com/ewigl/hus/main/images/00.png)
+
+网站会员用户：
+
+点击免费获取即可自动获取全部提取码，并汇总填充提取码后的链接。
+
+可选功能：进入帖子时立即自动获取提取码。（不推荐开启，如果访问帖子频率过高会触发验证机制。）
+
+![01](https://raw.githubusercontent.com/ewigl/hus/main/images/01.png)
 
 ### 相关
 
