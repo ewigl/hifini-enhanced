@@ -98,7 +98,7 @@
         getRandomReply() {
             return RANDOM_REPLIES[Math.floor(Math.random() * RANDOM_REPLIES.length)]
         },
-        // 根据页面是否有 alert-success 类元素判断当前帖是否已回复
+        // 根据页面是否有 alert-success 类元素判断当前帖是否已回复（或为 VIP）
         isReplied() {
             return $(`.${constants.REPLIED_CLASS}`).length > 0
         },
@@ -123,9 +123,7 @@
         },
         getLanzouSubButton() {
             // 确定蓝奏网盘的提交按钮，为什么蓝奏你要做两个不同的页面。(╯‵□′)╯︵┻━┻
-            const subButton = $(constants.LANZN_PWD_SUB_SELECTOR)[0] || $(constants.LANZOUE_PWD_SUB_SELECTOR)[0]
-
-            return subButton
+            return $(constants.LANZN_PWD_SUB_SELECTOR)[0] || $(constants.LANZOUE_PWD_SUB_SELECTOR)[0]
         },
         simulateInput(element, text) {
             element.focus()
@@ -259,31 +257,8 @@
                 }
             })
         },
-    }
-
-    const operation = {
-        // 快速回复当前帖
-        quickReply() {
-            const replyInputDom = $(`#${constants.QUICK_REPLY_INPUT_ID}`)
-            const submitButtonDom = $(`#${constants.QUICK_REPLY_SUBMIT_ID}`)
-
-            if (replyInputDom.length) {
-                replyInputDom.focus()
-                replyInputDom.val(utils.getRandomReply())
-
-                // 模拟点击提交按钮
-                submitButtonDom.click()
-
-                //   直接触发提交动作
-                //   $("#quick_reply_form").submit();
-            } else {
-                utils.logger('需要登录。')
-                window.location.href = constants.USER_LOGIN_URL
-            }
-
-            // 可选， Ajax 方式
-        },
-        getPanCode(id, panCode) {
+        // VIP 提取码获取
+        getVIPPanCode(id, panCode) {
             return new Promise((resolve, reject) => {
                 let formData = new FormData()
                 $(`#${id}`)[0].innerText = 'loading...'
@@ -317,7 +292,31 @@
                 })
             })
         },
-        // VIP 自动获取提取码
+    }
+
+    const operation = {
+        // 快速回复当前帖
+        quickReply() {
+            const replyInputDom = $(`#${constants.QUICK_REPLY_INPUT_ID}`)
+            const submitButtonDom = $(`#${constants.QUICK_REPLY_SUBMIT_ID}`)
+
+            if (replyInputDom.length) {
+                replyInputDom.focus()
+                replyInputDom.val(utils.getRandomReply())
+
+                // 模拟点击提交按钮
+                submitButtonDom.click()
+
+                //   直接触发提交动作
+                //   $("#quick_reply_form").submit();
+            } else {
+                utils.logger('需要登录。')
+                window.location.href = constants.USER_LOGIN_URL
+            }
+
+            // 可选， Ajax 方式
+        },
+        // VIP 一键获取所有提取码
         getVIPPass() {
             const regex = /formData\.append\('pan_code',\s*'([^']+)'\)/g
             const matches = Array.from(document.body.innerHTML.matchAll(regex))
@@ -341,10 +340,10 @@
 
             const promises = []
             if (dpButton.length && dPanCode) {
-                promises.push(operation.getPanCode('dp_code', dPanCode))
+                promises.push(utils.getVIPPanCode('dp_code', dPanCode))
             }
             if (lpButton.length && lPanCode) {
-                promises.push(operation.getPanCode('lp_code', lPanCode))
+                promises.push(utils.getVIPPanCode('lp_code', lPanCode))
             }
 
             // 等待所有请求完成
