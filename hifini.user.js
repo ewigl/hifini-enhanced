@@ -41,6 +41,7 @@
         LANZOUE_HOST: 'lanzoue.com',
         LANZOUP_HOST: 'lanzoup.com',
         QUARK_HOST: 'pan.quark.cn',
+        XUNLEI_HOST: 'pan.xunlei.com',
 
         URL_PARAMS_PWD: 'pwd',
         LANZOU_PWD_INPUT_SELECTOR: '#pwd',
@@ -56,6 +57,7 @@
         [constants.LANZOUE_HOST]: '蓝奏',
         [constants.LANZOUP_HOST]: '蓝奏',
         [constants.QUARK_HOST]: '夸克',
+        [constants.XUNLEI_HOST]: '迅雷',
     }
 
     // 自定义样式
@@ -280,6 +282,7 @@
                 a[href*="${constants.LANZOUE_HOST}"],
                 a[href*="${constants.LANZOUP_HOST}"],
                 a[href*="${constants.QUARK_HOST}"],
+                a[href*="${constants.XUNLEI_HOST}"],
                 .${constants.REPLIED_CLASS}
                 `).toArray()
 
@@ -321,7 +324,7 @@
             return formattedDrives.map((item) => {
                 return {
                     ...item,
-                    link: item.pwd ? item.link.split('?')[0] + '?pwd=' + item.pwd : item.link,
+                    link: item.pwd ? item.link.split('?')[0].replace('#', '') + '?pwd=' + item.pwd : item.link,
                 }
             })
         },
