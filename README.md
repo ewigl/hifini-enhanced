@@ -1,5 +1,7 @@
 ## HIFINI 音乐磁场 增强
 
+> Greasymonkey / Violentmonkey 网页脚本。
+
 [GitHub](https://github.com/ewigl/hifini-enhanced)
 
 [GitHub Raw](https://raw.githubusercontent.com/ewigl/hifini-enhanced/refs/heads/main/hifini.user.js)
@@ -14,21 +16,21 @@
 
 ### 自动汇总网盘链接
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
 
 ### 自动填充网盘提取码
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)。
+支持百度网盘、蓝奏云 、夸克网盘、迅雷网盘。
 
 ### 填充后自动点击提取按钮
 
-支持蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)。
+支持蓝奏云 、夸克网盘。
 
-### 图例
+### 使用方法
 
 网站普通用户：
 
-点击自动回复即会自动刷新网页并汇总链接。
+点击自动回复即会自动刷新网页并汇总网盘链接。
 
 ![00](https://raw.githubusercontent.com/ewigl/hus/main/images/00.png)
 
