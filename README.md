@@ -1,4 +1,6 @@
-## HIFINI 音乐磁场 增强
+## ~~HIFINI 音乐磁场 增强~~
+
+![Image](https://github.com/user-attachments/assets/a2b04a47-5c08-4ad6-8df7-8fccf9d49f4e)
 
 > Greasymonkey / Violentmonkey 网页脚本。
 
