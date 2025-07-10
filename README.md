@@ -1,4 +1,4 @@
-## ~~HIFINI~~ / HIFITI 音乐磁场 增强
+## ~~HIFINI~~ HIFITI 音乐磁场 增强
 
 > Greasymonkey / Violentmonkey 网页脚本。
 
@@ -10,13 +10,9 @@
 
 ### 随机自动回复
 
-> 以下内容
-
-    '666', 'Good.', 'Nice.', 'Thanks.', '给力', '谢谢', '谢谢分享', '谢谢大佬', '感谢', '感谢分享', '感谢大佬'
-
 ### 自动汇总网盘链接
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com、lanzouu.com) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoup.com 等) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
 
 ### 自动填充网盘提取码
 
@@ -48,4 +44,4 @@
 
 ### 相关
 
-[HIFINI 定时自动签到](https://github.com/ewigl/hifini-auto-checkin): 使用 GitHub Actions 定时自动签到。
+[HIFITI 定时自动签到](https://github.com/ewigl/hifiti-auto-checkin): 使用 GitHub Actions 定时自动签到。
