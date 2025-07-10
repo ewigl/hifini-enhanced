@@ -42,7 +42,7 @@
 
 **触发验证机制如何恢复**：关闭自动获取提取码功能，刷新网页，点击任意“点击免费获取”按钮并完成验证码。
 
-**关于验证机制的官方说明**：[积分 / VIP 使用问题说明](https://www.hifini.com/thread-6.htm)
+**关于 HIFITI 验证机制的官方说明**：[积分 / VIP 使用问题说明](https://www.hifiti.com/thread-1.htm)
 
 ![01](https://raw.githubusercontent.com/ewigl/hus/main/images/01.png)
 
