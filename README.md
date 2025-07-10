@@ -1,6 +1,4 @@
-## ~~HIFINI 音乐磁场 增强~~ HIFINI 已关站
-
-![Image](https://github.com/user-attachments/assets/a2b04a47-5c08-4ad6-8df7-8fccf9d49f4e)
+## ~~HIFINI~~ / HIFITI 音乐磁场 增强
 
 > Greasymonkey / Violentmonkey 网页脚本。
 
@@ -18,7 +16,7 @@
 
 ### 自动汇总网盘链接
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoue.com、lanzoup.com、lanzouu.com) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
 
 ### 自动填充网盘提取码
 
