@@ -7,9 +7,11 @@
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifini-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
+// @match        http*://*.hifiti.com/thread-*.htm
 // @match        http*://*.lanzn.com/*
 // @match        http*://*.lanzoue.com/*
 // @match        http*://*.lanzoup.com/*
+// @match        http*://*.lanzouu.com/*
 // @match        http*://*.pan.quark.cn/s/*
 // @icon         https://www.hifini.com/favicon.ico
 // @grant        GM_addStyle
@@ -40,6 +42,7 @@
         LANZN_HOST: 'lanzn.com',
         LANZOUE_HOST: 'lanzoue.com',
         LANZOUP_HOST: 'lanzoup.com',
+        LANZOUU_HOST: 'lanzouu.com',
         QUARK_HOST: 'pan.quark.cn',
         XUNLEI_HOST: 'pan.xunlei.com',
 
@@ -56,6 +59,7 @@
         [constants.LANZN_HOST]: '蓝奏',
         [constants.LANZOUE_HOST]: '蓝奏',
         [constants.LANZOUP_HOST]: '蓝奏',
+        [constants.LANZOUU_HOST]: '蓝奏',
         [constants.QUARK_HOST]: '夸克',
         [constants.XUNLEI_HOST]: '迅雷',
     }
@@ -180,7 +184,8 @@
             return (
                 location.host.includes(constants.LANZN_HOST) ||
                 location.host.includes(constants.LANZOUE_HOST) ||
-                location.host.includes(constants.LANZOUP_HOST)
+                location.host.includes(constants.LANZOUP_HOST) ||
+                location.host.includes(constants.LANZOUU_HOST)
             )
         },
         isInQuarkSite() {
@@ -231,8 +236,8 @@
         },
         // 提取 alert-success 中内容，包含所有链接、提取码。
         extractUrlOrCode(innerText) {
-            // 匹配链接或（及）提取码
-            const combinedRegex = /(https?:\/\/[^\s]+)|提取码:\s*([a-zA-Z0-9]+)/g
+            // 匹配链接或（及）提取码（及）密码
+            const combinedRegex = /(https?:\/\/[^\s]+)|提取码:\s*([a-zA-Z0-9]+)|密码:\s*([a-zA-Z0-9]+)/g
 
             const results = []
             let match
@@ -246,10 +251,11 @@
                     })
                 }
                 // 提取码（match[2]）
-                if (match[2]) {
+                if (match[2] || match[3]) {
+                    utils.logger('提取码匹配到:', match[2] || match[3])
                     results.push({
                         type: constants.URL_PARAMS_PWD,
-                        pwd: match[2],
+                        pwd: match[2] || match[3],
                     })
                 }
             }
@@ -281,6 +287,7 @@
                 a[href*="${constants.LANZN_HOST}"],
                 a[href*="${constants.LANZOUE_HOST}"],
                 a[href*="${constants.LANZOUP_HOST}"],
+                a[href*="${constants.LANZOUU_HOST}"],
                 a[href*="${constants.QUARK_HOST}"],
                 a[href*="${constants.XUNLEI_HOST}"],
                 .${constants.REPLIED_CLASS}
