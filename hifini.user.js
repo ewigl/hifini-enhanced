@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         HIFINI / HIFITI 音乐磁场 增强
-// @namespace    https://github.com/ewigl/hifini-enhanced
-// @version      0.4.8
+// @name         HIFITI 音乐磁场 增强
+// @namespace    https://github.com/ewigl/hifiti-enhanced
+// @version      0.4.9
 // @description  一键自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
@@ -12,6 +12,7 @@
 // @match        http*://*.lanzoue.com/*
 // @match        http*://*.lanzoup.com/*
 // @match        http*://*.lanzouu.com/*
+// @match        http*://*.lanzouw.com/*
 // @match        http*://*.pan.quark.cn/s/*
 // @icon         https://www.hifini.com/favicon.ico
 // @grant        GM_addStyle
@@ -43,6 +44,7 @@
         LANZOUE_HOST: 'lanzoue.com',
         LANZOUP_HOST: 'lanzoup.com',
         LANZOUU_HOST: 'lanzouu.com',
+        LANZOUW_HOST: 'lanzouw.com',
         QUARK_HOST: 'pan.quark.cn',
         XUNLEI_HOST: 'pan.xunlei.com',
 
@@ -60,6 +62,7 @@
         [constants.LANZOUE_HOST]: '蓝奏',
         [constants.LANZOUP_HOST]: '蓝奏',
         [constants.LANZOUU_HOST]: '蓝奏',
+        [constants.LANZOUW_HOST]: '蓝奏',
         [constants.QUARK_HOST]: '夸克',
         [constants.XUNLEI_HOST]: '迅雷',
     }
@@ -203,7 +206,8 @@
                 location.host.includes(constants.LANZN_HOST) ||
                 location.host.includes(constants.LANZOUE_HOST) ||
                 location.host.includes(constants.LANZOUP_HOST) ||
-                location.host.includes(constants.LANZOUU_HOST)
+                location.host.includes(constants.LANZOUU_HOST) ||
+                location.host.includes(constants.LANZOUW_HOST)
             )
         },
         isInQuarkSite() {
@@ -306,6 +310,7 @@
                 a[href*="${constants.LANZOUE_HOST}"],
                 a[href*="${constants.LANZOUP_HOST}"],
                 a[href*="${constants.LANZOUU_HOST}"],
+                a[href*="${constants.LANZOUW_HOST}"],
                 a[href*="${constants.QUARK_HOST}"],
                 a[href*="${constants.XUNLEI_HOST}"],
                 .${constants.REPLIED_CLASS}
