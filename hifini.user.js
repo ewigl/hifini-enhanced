@@ -1,20 +1,17 @@
 // ==UserScript==
 // @name         HIFITI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifiti-enhanced
-// @version      0.4.9
+// @version      0.5.0
 // @description  一键自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
-// @homepage     https://github.com/ewigl/hifini-enhanced
+// @homepage     https://github.com/ewigl/hifiti-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.hifiti.com/thread-*.htm
 // @match        http*://*.lanzn.com/*
-// @match        http*://*.lanzoue.com/*
-// @match        http*://*.lanzoup.com/*
-// @match        http*://*.lanzouu.com/*
-// @match        http*://*.lanzouw.com/*
+// @match        http*://*.lanzou*.com/*
 // @match        http*://*.pan.quark.cn/s/*
-// @icon         https://www.hifini.com/favicon.ico
+// @icon         https://www.hifiti.com/favicon.ico
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -41,10 +38,7 @@
 
         BAIDU_HOST: 'pan.baidu.com',
         LANZN_HOST: 'lanzn.com',
-        LANZOUE_HOST: 'lanzoue.com',
-        LANZOUP_HOST: 'lanzoup.com',
-        LANZOUU_HOST: 'lanzouu.com',
-        LANZOUW_HOST: 'lanzouw.com',
+        LANZOU_HOSTS: 'abcdefghijklmnopqrstuvwxyz'.split('').map((char) => `lanzou${char}.com`),
         QUARK_HOST: 'pan.quark.cn',
         XUNLEI_HOST: 'pan.xunlei.com',
 
@@ -56,16 +50,13 @@
         USER_LOGIN_URL: '/user-login.htm',
     }
 
-    const NET_DISK_TYPES = {
-        [constants.BAIDU_HOST]: '百度',
-        [constants.LANZN_HOST]: '蓝奏',
-        [constants.LANZOUE_HOST]: '蓝奏',
-        [constants.LANZOUP_HOST]: '蓝奏',
-        [constants.LANZOUU_HOST]: '蓝奏',
-        [constants.LANZOUW_HOST]: '蓝奏',
-        [constants.QUARK_HOST]: '夸克',
-        [constants.XUNLEI_HOST]: '迅雷',
-    }
+    const NET_DISK_TYPES = [
+        { host: constants.BAIDU_HOST, name: '百度' },
+        { host: constants.LANZN_HOST, name: '蓝奏' },
+        { host: constants.QUARK_HOST, name: '夸克' },
+        { host: constants.XUNLEI_HOST, name: '迅雷' },
+        ...constants.LANZOU_HOSTS.map((host) => ({ host, name: '蓝奏' })),
+    ]
 
     // 自定义样式
     const styleCSS = `
@@ -193,22 +184,18 @@
             return utils.getValue('autoVIPGetCode')
         },
         getNetDiskTypeString(url) {
-            for (let key in NET_DISK_TYPES) {
-                if (url.includes(key)) {
-                    return NET_DISK_TYPES[key]
+            const diskTypeslength = NET_DISK_TYPES.length
+
+            for (let i = 0; i < diskTypeslength; i++) {
+                if (url.includes(NET_DISK_TYPES[i].host)) {
+                    return NET_DISK_TYPES[i].name
                 }
             }
 
             return '未知'
         },
         isInLanzouSite() {
-            return (
-                location.host.includes(constants.LANZN_HOST) ||
-                location.host.includes(constants.LANZOUE_HOST) ||
-                location.host.includes(constants.LANZOUP_HOST) ||
-                location.host.includes(constants.LANZOUU_HOST) ||
-                location.host.includes(constants.LANZOUW_HOST)
-            )
+            return constants.LANZOU_HOSTS.some((host) => location.host.includes(host))
         },
         isInQuarkSite() {
             return location.host.includes(constants.QUARK_HOST)
@@ -302,19 +289,18 @@
         getDrivesReady() {
             // 获取页面内所有网盘链接（百度、蓝奏、夸克）, 以及所有隐藏内容（alert-success）。
             // 逻辑基础：所有的提取码必须在隐藏内容（绿条）内。
+            const baseSelectors = [
+                `a[href*="${constants.BAIDU_HOST}"]`,
+                `a[href*="${constants.LANZN_HOST}"]`,
+                `a[href*="${constants.QUARK_HOST}"]`,
+                `a[href*="${constants.XUNLEI_HOST}"]`,
+                `.${constants.REPLIED_CLASS}`,
+            ]
+            const lanzouSelectors = constants.LANZOU_HOSTS.map((host) => `a[href*="${host}"]`)
+            const allSelectors = baseSelectors.concat(lanzouSelectors).join(',')
 
             // 虽然叫 hiddenElements，但实际上是所有的网盘链接 + 回复可见内容。
-            let hiddenElements = $(`
-                a[href*="${constants.BAIDU_HOST}"],
-                a[href*="${constants.LANZN_HOST}"],
-                a[href*="${constants.LANZOUE_HOST}"],
-                a[href*="${constants.LANZOUP_HOST}"],
-                a[href*="${constants.LANZOUU_HOST}"],
-                a[href*="${constants.LANZOUW_HOST}"],
-                a[href*="${constants.QUARK_HOST}"],
-                a[href*="${constants.XUNLEI_HOST}"],
-                .${constants.REPLIED_CLASS}
-                `).toArray()
+            let hiddenElements = $(allSelectors).toArray()
 
             let formattedDrives = []
 
