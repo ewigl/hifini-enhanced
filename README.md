@@ -1,4 +1,6 @@
-## ~~HIFINI~~ HIFITI 音乐磁场 增强
+## HIFITI 音乐磁场 增强
+
+> 原 "HIFINI 音乐磁场 增强"。如果之前安装过"HIFINI 音乐磁场 增强"请先卸载旧版本再安装该脚本，避免冲突。
 
 > Greasymonkey / Violentmonkey 网页脚本。
 
@@ -12,7 +14,7 @@
 
 ### 自动汇总网盘链接
 
-支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzoup.com 等) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
+支持百度网盘 (pan.baidu.com) 、蓝奏云 (lanzn.com、lanzou\*.com) 、夸克网盘 (pan.quark.cn)、迅雷网盘（pan.xunlei.com）。
 
 ### 自动填充网盘提取码
 
@@ -44,4 +46,4 @@
 
 ### 相关
 
-[HIFITI 定时自动签到](https://github.com/ewigl/hifiti-auto-checkin): 使用 GitHub Actions 定时自动签到。
+[HIFITI 定时自动签到](https://github.com/ewigl/hifiti-auto-checkin): 使用 GitHub Actions 定时自动签到，支持配置多个账户。
