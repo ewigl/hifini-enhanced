@@ -169,7 +169,7 @@
         },
         // 顺便封装一下 log 吧，加个前缀。。。
         logger(...msg) {
-            const prefix = '[HIFINI Enhanced]'
+            const prefix = '[HIFITI Enhanced]'
             console.log(prefix, ...msg)
         },
         // 获取随机回复
