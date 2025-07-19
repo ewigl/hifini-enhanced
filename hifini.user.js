@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         HIFITI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifiti-enhanced
-// @version      0.5.0
+// @version      0.5.1
 // @description  一键自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifiti-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.hifiti.com/thread-*.htm
+// @match        http*://*.hifini.com.cn/thread-*.htm
 // @match        http*://*.lanzn.com/*
 // @match        http*://*.lanzou*.com/*
 // @match        http*://*.pan.quark.cn/s/*
