@@ -1,8 +1,6 @@
-## HIFITI 音乐磁场 增强
+## HIFINI 音乐磁场 增强
 
-> 原 "HIFINI 音乐磁场 增强"。如果之前安装过"HIFINI 音乐磁场 增强"请先卸载旧版本再安装该脚本，避免冲突。
-
-> Greasymonkey / Violentmonkey 网页脚本。
+> 适配 ~~hifini.com~~(原网站，已关站)、hifiti.com、hifini.com.cn。
 
 [GitHub](https://github.com/ewigl/hifini-enhanced)
 
@@ -46,4 +44,4 @@
 
 ### 相关
 
-[HIFITI 定时自动签到](https://github.com/ewigl/hifiti-auto-checkin): 使用 GitHub Actions 定时自动签到，支持配置多个账户。
+[HIFINI 定时自动签到](https://github.com/ewigl/hifiti-auto-checkin): 使用 GitHub Actions 定时自动签到，支持配置多个账户。
