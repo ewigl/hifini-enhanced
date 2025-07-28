@@ -1,6 +1,8 @@
 ## HIFINI 音乐磁场 增强
 
 > 适配 ~~hifini.com~~(原网站，已关站)、hifiti.com、hifini.com.cn。
+>
+> 推荐使用 Violentmonkey，因 Tampermonkey 闭源并且需要额外的扩展程序开发者模式权限，未针对其进行适配。
 
 [GitHub](https://github.com/ewigl/hifini-enhanced)
 
