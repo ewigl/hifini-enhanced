@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         HIFITI 音乐磁场 增强
 // @namespace    https://github.com/ewigl/hifiti-enhanced
-// @version      0.5.2
+// @version      0.5.4
 // @description  一键自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
 // @homepage     https://github.com/ewigl/hifiti-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.hifiti.com/thread-*.htm
+// @match        http*://*.hifihi.com/thread-*.htm
 // @match        http*://*.hifini.com.cn/thread-*.htm
 // @match        http*://*.lanzn.com/*
 // @include      /^https?:\/\/([a-z0-9-]+\.)*lanzou[a-z]\.com\/.*/
@@ -58,74 +59,6 @@
         { host: constants.XUNLEI_HOST, name: '迅雷' },
         ...constants.LANZOU_HOSTS.map((host) => ({ host, name: '蓝奏' })),
     ]
-
-    // 自定义样式
-    const styleCSS = `
-    #${constants.BUTTONS_PANEL_ID} {
-        position: sticky;
-        top: 16px;
-    }
-
-    #${constants.DOWNLOAD_LINKS_PANEL_ID} {
-        position: sticky;
-        top: 202px;
-    }
-
-    .he_custom_switch {
-        position: relative;
-        display: inline-block;
-        width: 40px;
-        height: 18px;
-    }
-
-    .he_custom_switch input { 
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .he_custom_slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    .he_custom_slider:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 1px;
-        bottom: 1px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    input:checked + .he_custom_slider {
-        background-color: #2196F3;
-    }
-
-    input:focus + .he_custom_slider {
-        box-shadow: 0 0 1px #2196F3;
-    }
-
-    input:checked + .he_custom_slider:before {
-        -webkit-transform: translateX(22px);
-        -ms-transform: translateX(22px);
-        transform: translateX(22px);
-    }
-
-    `
-
-    // 应用自定义样式
-    GM_addStyle(styleCSS)
 
     // 随机回复项目
     const RANDOM_REPLIES = [
@@ -451,6 +384,82 @@
         initDefaultConfig() {
             utils.getValue('autoVIPGetCode') === undefined && utils.setValue('autoVIPGetCode', false)
         },
+        addStyles() {
+            let buttonTop = '16px'
+            let linkTop = '202px'
+
+            if (location.host.includes('hifini.com.cn') || location.host.includes('hifihi.com')) {
+                buttonTop = '220px'
+                linkTop = '406px'
+            }
+
+            // 自定义样式
+            const styleCSS = `
+                #${constants.BUTTONS_PANEL_ID} {
+                    position: sticky;
+                    top: ${buttonTop};
+                }
+
+                #${constants.DOWNLOAD_LINKS_PANEL_ID} {
+                    position: sticky;
+                    top: ${linkTop};
+                }
+
+                .he_custom_switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 40px;
+                    height: 18px;
+                }
+
+                .he_custom_switch input { 
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+
+                .he_custom_slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                }
+
+                .he_custom_slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 16px;
+                    width: 16px;
+                    left: 1px;
+                    bottom: 1px;
+                    background-color: white;
+                    -webkit-transition: .4s;
+                    transition: .4s;
+                }
+
+                input:checked + .he_custom_slider {
+                    background-color: #2196F3;
+                }
+
+                input:focus + .he_custom_slider {
+                    box-shadow: 0 0 1px #2196F3;
+                }
+
+                input:checked + .he_custom_slider:before {
+                    -webkit-transform: translateX(22px);
+                    -ms-transform: translateX(22px);
+                    transform: translateX(22px);
+                }
+            `
+
+            // 应用自定义样式
+            GM_addStyle(styleCSS)
+        },
         addEnhancedButtons() {
             // “度盘”按钮
             const dpButton = $(`#dp_code`)
@@ -592,6 +601,7 @@
                 if (utils.isAutoVIPGetCode()) {
                     operation.getVIPPass()
                 }
+                initAction.addStyles()
                 initAction.addEnhancedButtons()
                 utils.isReplied() && initAction.addNetDiskLinksPanel()
 
