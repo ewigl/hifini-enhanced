@@ -1,12 +1,10 @@
 ## HIFINI 音乐磁场 增强
 
-> 适配 ~~hifini.com~~(原网站，已关站)、hifiti.com、hifini.com.cn。
+> 适配 ~~hifini.com~~(原网站，已关站)、hifiti.com、hifihi.com、hifini.com.cn。
 >
-> 推荐使用 Violentmonkey，因 Tampermonkey 闭源并且需要额外的扩展程序开发者模式权限，未针对其进行适配。
+> 推荐使用 Violentmonkey，未针对 Tampermonkey 进行适配。
 
 [GitHub](https://github.com/ewigl/hifini-enhanced)
-
-[GitHub Raw](https://raw.githubusercontent.com/ewigl/hifini-enhanced/refs/heads/main/hifini.user.js)
 
 [Greasy Fork](https://greasyfork.org/scripts/502411)
 
@@ -36,14 +34,12 @@
 
 点击免费获取即可自动获取全部提取码，并汇总填充提取码后的链接。
 
-**可选功能**：进入帖子时立即自动获取提取码。（不推荐开启，如果访问帖子频率过高会触发验证机制。）
+**可选功能**：进入帖子时立即自动获取提取码。（不推荐开启，如果访问帖子频率过高会触发网站反爬验证机制。）
 
 **触发验证机制如何恢复**：关闭自动获取提取码功能，刷新网页，点击任意“点击免费获取”按钮并完成验证码。
-
-**关于 HIFITI 验证机制的官方说明**：[积分 / VIP 使用问题说明](https://www.hifiti.com/thread-1.htm)
 
 ![01](https://raw.githubusercontent.com/ewigl/hus/main/images/01.png)
 
 ### 相关
 
-[HIFINI 定时自动签到](https://github.com/ewigl/hifiti-auto-checkin): 使用 GitHub Actions 定时自动签到，支持配置多个账户。
+[HIFINI 定时自动签到](https://github.com/ewigl/hifini-auto-checkin): 使用 GitHub Actions 定时自动签到，支持配置多个账户。
