@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         HIFITI 音乐磁场 增强
-// @namespace    https://github.com/ewigl/hifiti-enhanced
+// @name         HIFINI 音乐磁场 增强
+// @namespace    https://github.com/ewigl/hifini-enhanced
 // @version      0.5.4
 // @description  一键自动回帖，汇总网盘链接，自动填充网盘提取码。
 // @author       Licht
 // @license      MIT
-// @homepage     https://github.com/ewigl/hifiti-enhanced
+// @homepage     https://github.com/ewigl/hifini-enhanced
 // @match        http*://*.hifini.com/thread-*.htm
 // @match        http*://*.hifiti.com/thread-*.htm
 // @match        http*://*.hifihi.com/thread-*.htm
@@ -103,7 +103,7 @@
         },
         // 顺便封装一下 log 吧，加个前缀。。。
         logger(...msg) {
-            const prefix = '[HIFITI Enhanced]'
+            const prefix = '[HIFINI Enhanced]'
             console.log(prefix, ...msg)
         },
         // 获取随机回复
