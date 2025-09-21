@@ -1,8 +1,6 @@
 ## HIFINI 音乐磁场 增强
 
-> 适配 ~~hifini.com~~(原网站，已关站)、hifiti.com、hifihi.com、hifini.com.cn。
->
-> 推荐使用 Violentmonkey，未针对 Tampermonkey 进行适配。
+> 适配 ~~hifini.com~~(原网站，已关站)、hifiki.com、hifini.xyz、hifiti.com、hifihi.com、hifini.com.cn。
 
 [GitHub](https://github.com/ewigl/hifini-enhanced)
 
